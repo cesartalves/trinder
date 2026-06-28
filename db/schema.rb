@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.2].define(version: 2026_06_28_155744) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,20 +51,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_28_155744) do
   end
 
   create_table "photos", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_photos_on_user_id"
   end
 
   create_table "potential_matches", force: :cascade do |t|
-    t.integer "user_1_id", null: false
-    t.integer "user_2_id", null: false
+    t.bigint "user_1_id", null: false
+    t.bigint "user_2_id", null: false
     t.string "state", default: "potential", null: false
-    t.integer "match_id"
+    t.bigint "match_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "liked_by_id"
+    t.bigint "liked_by_id"
     t.index ["liked_by_id"], name: "index_potential_matches_on_liked_by_id"
     t.index ["match_id"], name: "index_potential_matches_on_match_id"
     t.index ["user_1_id", "user_2_id"], name: "index_potential_matches_on_user_1_id_and_user_2_id", unique: true

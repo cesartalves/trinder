@@ -1,0 +1,14 @@
+<h1>Your Matches</h1>
+
+<% if @matches.any? %>
+  <ul>
+    <% @matches.each do |match| %>
+      <% other_user = match.user_1 == current_user ? match.user_2 : match.user_1 %>
+      <li>
+        <%= link_to other_user.name, match_path(match) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You have no matches yet.</p>
+<% end %>

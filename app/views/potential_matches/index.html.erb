@@ -1,0 +1,24 @@
+
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+
+
+<% if @potential_match %>
+  <% other_user =
+    @potential_match.user_1 == current_user ?
+      @potential_match.user_2 :
+      @potential_match.user_1
+  %>
+
+  <h2><%= other_user.name %></h2>
+  <p><%= other_user.description %></p>
+
+  <div class="potential-match-actions">
+    <%= button_to "Like", like_potential_match_path(@potential_match), method: :patch, class: "btn btn-primary" %>
+    <%= button_to "Dislike", decline_potential_match_path(@potential_match), method: :patch, class: "btn btn-secondary" %>
+  </div>
+<% else %>
+  <p>No potential matches right now.</p>
+<% end %>
+

@@ -1,0 +1,8 @@
+<h1>Match Details</h1>
+
+<% other_user = @match.user_1 == current_user ? @match.user_2 : @match.user_1 %>
+
+<p><strong>Name:</strong> <%= other_user.name %></p>
+<p><strong>Description:</strong> <%= other_user.description %></p>
+
+<%= link_to "Back to matches", matches_path %>

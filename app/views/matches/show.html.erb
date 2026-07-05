@@ -1,26 +1,55 @@
+<div class="container py-4">
+  <div class="mx-auto" style="max-width: 700px;">
 
-<% profile_photo = @other_user.photos.find_by(position: 0) %>
+    <div class="card border-0 shadow rounded-4">
 
-      
-  <% if profile_photo&.image&.attached? %>
-    <%= image_tag profile_photo.image, class: "match-avatar" %>
-  <% else %>
-    <div class="match-avatar-placeholder">
-      <i class="bi bi-person-fill"></i>
+      <div class="card-header bg-white border-0 d-flex align-items-center gap-3 py-3">
+
+        <% profile_photo = @other_user.photos.find_by(position: 0) %>
+
+        <% if profile_photo&.image&.attached? %>
+          <%= image_tag profile_photo.image, class: "match-avatar" %>
+        <% else %>
+          <div class="match-avatar-placeholder">
+            <i class="bi bi-person-fill"></i>
+          </div>
+        <% end %>
+
+        <h3 class="mb-0 fw-bold">
+          <%= @other_user.name %>
+        </h3>
+
+      </div>
+
+      <div class="card-body">
+
+        <div class="chat-box">
+          <% @messages.each do |message| %>
+            <div class="chat-message <%= message.user == current_user ? "mine" : "theirs" %>">
+              <p class="mb-1"><%= message.body %></p>
+              <small><%= message.created_at.strftime("%H:%M") %></small>
+            </div>
+          <% end %>
+        </div>
+
+      </div>
+
+      <div class="card-footer bg-white border-0">
+
+        <%= form_with model: [@match, @message], class: "chat-form" do |f| %>
+          <div class="input-group">
+            <%= f.text_field :body,
+                  placeholder: "Type a message...",
+                  autocomplete: "off",
+                  class: "form-control" %>
+
+            <%= f.submit "Send", class: "btn btn-danger" %>
+          </div>
+        <% end %>
+
+      </div>
+
     </div>
-  <% end %>
-<span style="font-weight: bold; size: 3rem;"><%= @other_user.name %></span>
 
-<div class="chat-box">
-  <% @messages.each do |message| %>
-    <div class="chat-message <%= message.user == current_user ? "mine" : "theirs" %>">
-      <p><%= message.body %></p>
-      <small><%= message.created_at.strftime("%H:%M") %></small>
-    </div>
-  <% end %>
+  </div>
 </div>
-
-<%= form_with model: [@match, @message], class: "chat-form" do |f| %>
-  <%= f.text_field :body, placeholder: "Type a message...", autocomplete: "off" %>
-  <%= f.submit "Send" %>
-<% end %>

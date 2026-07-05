@@ -1,26 +1,51 @@
-<h1>Your Matches</h1>
+<div class="container py-4">
+  <div class="mx-auto" style="max-width: 500px;">
 
-<% if @matches.any? %>
-  <ul>
-    <% @matches.each do |match| %>
-      <% other_user = match.user_1 == current_user ? match.user_2 : match.user_1 %>
-      <li class="match-item">
-      <% profile_photo = other_user.photos.find_by(position: 0) %>
+    <h1 class="text-center mb-4">🔥 Your Matches</h1>
 
-      <%= link_to match_path(match), class: "match-link" do %>
-        <% if profile_photo&.image&.attached? %>
-          <%= image_tag profile_photo.image, class: "match-avatar" %>
-        <% else %>
-          <div class="match-avatar-placeholder">
-            <i class="bi bi-person-fill"></i>
-          </div>
-        <% end %>
+    <% if @matches.any? %>
 
-        <span><%= other_user.name %></span>
-      <% end %>
-  </li>
+      <div class="card border-0 shadow rounded-4">
+        <div class="list-group list-group-flush">
+
+          <% @matches.each do |match| %>
+            <% other_user = match.user_1 == current_user ? match.user_2 : match.user_1 %>
+            <% profile_photo = other_user.photos.find_by(position: 0) %>
+
+            <%= link_to match_path(match),
+                  class: "list-group-item list-group-item-action border-0 match-link" do %>
+
+              <% if profile_photo&.image&.attached? %>
+                <%= image_tag profile_photo.image, class: "match-avatar" %>
+              <% else %>
+                <div class="match-avatar-placeholder">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+              <% end %>
+
+              <div class="flex-grow-1">
+                <h5 class="mb-0"><%= other_user.name %></h5>
+              </div>
+
+              <i class="bi bi-chevron-right text-muted"></i>
+
+            <% end %>
+
+          <% end %>
+
+        </div>
+      </div>
+
+    <% else %>
+
+      <div class="card border-0 shadow rounded-4 p-5 text-center">
+        <h3>💔 No matches yet</h3>
+        <p class="text-muted mb-0">
+          Keep swiping and your matches will appear here.
+        </p>
+      </div>
+
     <% end %>
-  </ul>
-<% else %>
-  <p>You have no matches yet.</p>
-<% end %>
+
+  </div>
+</div>

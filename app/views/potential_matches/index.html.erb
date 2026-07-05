@@ -1,58 +1,73 @@
-
-  <div class="notice">
+<% if flash[:notice].present? %>
+  <div class="alert alert-success text-center rounded-pill mx-auto mt-3" style="max-width: 420px;">
     <%= flash[:notice] %>
   </div>
-
-
-<% if @potential_match %>
-  <% other_user =
-    @potential_match.user_1 == current_user ?
-      @potential_match.user_2 :
-      @potential_match.user_1
-  %>
-
-  <h2><%= other_user.name %></h2>
-  <% photos = other_user.photos.order(:position).select { |p| p.image.attached? } %>
-
-  <div class="tinder-carousel" data-controller="photo-carousel">
-    <% photos.each_with_index do |photo, index| %>
-      <div class="tinder-slide <%= "active" if index == 0 %>" data-photo-carousel-target="slide">
-        <%= image_tag photo.image, class: "tinder-photo" %>
-      </div>
-    <% end %>
-
-    <% if photos.any? %>
-      <button type="button" class="carousel-zone left" data-action="click->photo-carousel#previous"></button>
-      <button type="button" class="carousel-zone right" data-action="click->photo-carousel#next"></button>
-
-      <div class="carousel-indicators">
-        <% photos.each_with_index do |_, index| %>
-          <span class="carousel-dot <%= "active" if index == 0 %>" data-photo-carousel-target="dot"></span>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="tinder-photo-placeholder">
-        No photos yet
-      </div>
-    <% end %>
-  </div>
-
-  <p><%= other_user.description %></p>
-
-  <div class="potential-match-actions">
-    <%= button_to like_potential_match_path(@potential_match),
-          method: :patch,
-          class: "match-button like-button" do %>
-      ❤️
-    <% end %>
-
-    <%= button_to decline_potential_match_path(@potential_match),
-          method: :patch,
-          class: "match-button dislike-button" do %>
-      ✕
-    <% end %>
-  </div>
-<% else %>
-  <p>No potential matches right now.</p>
 <% end %>
 
+<% if @potential_match %>
+  <% other_user = @potential_match.user_1 == current_user ? @potential_match.user_2 : @potential_match.user_1 %>
+  <% photos = other_user.photos.order(:position).select { |p| p.image.attached? } %>
+
+  <div class="container py-4">
+    <div class="mx-auto" style="max-width: 430px;">
+
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="tinder-carousel mb-0" data-controller="photo-carousel">
+          <% photos.each_with_index do |photo, index| %>
+            <div class="tinder-slide <%= "active" if index == 0 %>" data-photo-carousel-target="slide">
+              <%= image_tag photo.image, class: "tinder-photo" %>
+            </div>
+          <% end %>
+
+          <% if photos.any? %>
+            <button type="button" class="carousel-zone left" data-action="click->photo-carousel#previous"></button>
+            <button type="button" class="carousel-zone right" data-action="click->photo-carousel#next"></button>
+
+            <div class="carousel-indicators">
+              <% photos.each_with_index do |_, index| %>
+                <span class="carousel-dot <%= "active" if index == 0 %>" data-photo-carousel-target="dot"></span>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="tinder-photo-placeholder">
+              <i class="bi bi-person-fill"></i>
+              <p>No photos yet</p>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="card-body p-4">
+          <h2 class="mb-2">
+            <%= other_user.name.presence || "Unnamed user" %>
+          </h2>
+
+          <p class="text-muted mb-0">
+            <%= other_user.description.presence || "No description yet." %>
+          </p>
+        </div>
+      </div>
+
+      <div class="potential-match-actions mt-4">
+        <%= button_to decline_potential_match_path(@potential_match),
+              method: :patch,
+              class: "match-button dislike-button" do %>
+          ✕
+        <% end %>
+
+        <%= button_to like_potential_match_path(@potential_match),
+              method: :patch,
+              class: "match-button like-button" do %>
+          ❤️
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+<% else %>
+  <div class="container py-5 text-center">
+    <div class="card border-0 shadow rounded-4 mx-auto p-5" style="max-width: 420px;">
+      <h2>🔥 No matches right now</h2>
+      <p class="text-muted mb-0">Come back later to discover more people.</p>
+    </div>
+  </div>
+<% end %>

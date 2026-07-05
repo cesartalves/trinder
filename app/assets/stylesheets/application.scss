@@ -199,23 +199,24 @@
   color: #777;
 }
 
-.match-item {
-  list-style: none;
-  margin-bottom: 16px;
-}
-
 .match-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  text-decoration: none;
+  gap: 16px;
+  padding: 18px;
   color: inherit;
+  text-decoration: none;
+  transition: background-color .2s ease;
+}
+
+.match-link:hover {
+  background: #f8f9fa;
 }
 
 .match-avatar,
 .match-avatar-placeholder {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
 }
 
@@ -225,17 +226,20 @@
 
 .match-avatar-placeholder {
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: #eee;
-  color: #999;
-  font-size: 1.4rem;
+  align-items: center;
+  background: #ececec;
+  color: #888;
+  font-size: 1.6rem;
 }
 
-.match-link:hover {
-  color: #ff4458;
+.match-link h5 {
+  font-weight: 600;
 }
 
+.match-link .bi-chevron-right {
+  font-size: 1.2rem;
+}
 .chat-box {
   max-width: 600px;
   margin: 20px auto;
@@ -244,10 +248,19 @@
   gap: 10px;
 }
 
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
 .chat-message {
   max-width: 75%;
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-radius: 18px;
+  word-break: break-word;
 }
 
 .chat-message.mine {
@@ -258,28 +271,17 @@
 
 .chat-message.theirs {
   align-self: flex-start;
-  background: #eee;
-  color: #333;
+  background: #f1f3f5;
 }
 
-.chat-form {
-  max-width: 600px;
-  margin: 20px auto;
-  display: flex;
-  gap: 8px;
+.chat-message small {
+  display: block;
+  margin-top: 4px;
+  opacity: .7;
+  font-size: .75rem;
 }
 
-.chat-form input[type="text"] {
-  flex: 1;
-  border-radius: 999px;
-  border: 1px solid #ddd;
-  padding: 10px 14px;
-}
-
-.chat-form input[type="submit"] {
-  border-radius: 999px;
-  border: none;
-  background: #ff4458;
-  color: white;
-  padding: 10px 18px;
+.card-header {
+  position: sticky;
+  top: 0;
 }

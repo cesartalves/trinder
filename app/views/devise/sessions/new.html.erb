@@ -41,6 +41,14 @@
 
           <% end %>
 
+          <%= button_to user_google_oauth2_omniauth_authorize_path,
+                method: :post,
+                data: { turbo: false },
+                class: "btn btn-outline-danger w-100 rounded-pill mb-3 mt-4" do %>
+            <i class="bi bi-google"></i>
+            Continue with Google
+          <% end %>
+
           <hr>
 
           <div class="text-center">

@@ -6,8 +6,9 @@ class PotentialMatchesController < ApplicationController
   end
 
   def like
-    @potential_match = find_or_create_potential_match
-   
+    @potential_match = PotentialMatch.find(params[:id])
+    other_user = @potential_match.user_1 == current_user ? @potential_match.user_2 : @potential_match.user_1
+
     if @potential_match.liked? && @potential_match.liked_by != current_user
       ActiveRecord::Base.transaction do
         match = Match.create!(
@@ -29,12 +30,11 @@ class PotentialMatchesController < ApplicationController
       return redirect_to root_path, alert: "This match can no longer be updated."
     end
 
-    other_user = @potential_match.user_1 == current_user ? @potential_match.user_2 : @potential_match.user_1
     redirect_to root_path, notice: "You liked #{other_user.name}."
   end
 
   def decline
-    @potential_match = find_or_create_potential_match
+    @potential_match = PotentialMatch.find(params[:id])
 
     @potential_match.update!(state: :declined)
     other_user = @potential_match.user_1 == current_user ? @potential_match.user_2 : @potential_match.user_1

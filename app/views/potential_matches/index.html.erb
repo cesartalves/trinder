@@ -15,8 +15,17 @@
   <p><%= other_user.description %></p>
 
   <div class="potential-match-actions">
-    <%= button_to "Like", like_potential_match_path(@potential_match), method: :patch, class: "btn btn-primary" %>
-    <%= button_to "Dislike", decline_potential_match_path(@potential_match), method: :patch, class: "btn btn-secondary" %>
+    <%= button_to like_potential_match_path(@potential_match),
+          method: :patch,
+          class: "match-button like-button" do %>
+      ❤️
+    <% end %>
+
+    <%= button_to decline_potential_match_path(@potential_match),
+          method: :patch,
+          class: "match-button dislike-button" do %>
+      ✕
+    <% end %>
   </div>
 <% else %>
   <p>No potential matches right now.</p>

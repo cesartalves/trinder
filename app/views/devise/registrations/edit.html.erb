@@ -1,8 +1,9 @@
-<h2>Meu Perfil</h2>
+<h2>My Profile</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
+  
 
   <div class="field">
     <p><%= f.label :email %></p>
@@ -13,6 +14,42 @@
     <p><%= f.label :name %></p>
     <p><%= f.text_field :name, autocomplete: "name" %></p>
   </div>
+  <div class="field"></div>
+    <p><%= f.label :description %></p>
+    <p><%= f.text_area :description, autocomplete: "description" %></p>
+  </div>
+  
+  <h3>Photos</h3>
+
+  <div class="photo-grid">
+    <% 6.times do |i| %>
+      <% photo = resource.photos.find { |p| p.position == i } %>
+
+      <label class="photo-card">
+        <% if photo&.image&.attached? %>
+          <%= image_tag photo.image, class: "photo-card-image", id: "preview-#{i}" %>
+
+          <div class="photo-placeholder" id="placeholder-<%= i %>" style="display:none;">
+            <span>+</span>
+            <small>Add Photo</small>
+          </div>
+        <% else %>
+          <img id="preview-<%= i %>" class="photo-card-image" style="display:none;">
+
+          <div class="photo-placeholder" id="placeholder-<%= i %>">
+            <span>+</span>
+            <small>Add Photo</small>
+          </div>
+        <% end %>
+
+        <%= file_field_tag "photos[#{i}]",
+              accept: "image/*",
+              class: "photo-input",
+              data: { slot: i } %>
+      </label>
+    <% end %>
+  </div>
+
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>
@@ -30,18 +67,7 @@
     <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
   </div>
 
-  <div class="field">
-    <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
-    <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
-  </div>
-
   <div class="actions">
     <%= f.submit "Update" %>
   </div>
 <% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>

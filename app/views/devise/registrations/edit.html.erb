@@ -1,73 +1,129 @@
-<h2>My Profile</h2>
+<div class="container py-4">
+  <div class="mx-auto" style="max-width: 700px;">
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <div class="card border-0 shadow rounded-4">
 
-  
+      <div class="card-body p-4">
 
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
+        <h2 class="text-center mb-4">👤 My Profile</h2>
 
-  <div class="field">
-    <p><%= f.label :name %></p>
-    <p><%= f.text_field :name, autocomplete: "name" %></p>
-  </div>
-  <div class="field"></div>
-    <p><%= f.label :description %></p>
-    <p><%= f.text_area :description, autocomplete: "description" %></p>
-  </div>
-  
-  <h3>Photos</h3>
+        <%= form_for(resource,
+              as: resource_name,
+              url: registration_path(resource_name),
+              html: { method: :put, multipart: true }) do |f| %>
 
-  <div class="photo-grid">
-    <% 6.times do |i| %>
-      <% photo = resource.photos.find { |p| p.position == i } %>
+          <%= render "devise/shared/error_messages", resource: resource %>
 
-      <label class="photo-card">
-        <% if photo&.image&.attached? %>
-          <%= image_tag photo.image, class: "photo-card-image", id: "preview-#{i}" %>
-
-          <div class="photo-placeholder" id="placeholder-<%= i %>" style="display:none;">
-            <span>+</span>
-            <small>Add Photo</small>
+          <div class="mb-3">
+            <%= f.label :email, class: "form-label" %>
+            <%= f.email_field :email,
+                  autofocus: true,
+                  autocomplete: "email",
+                  class: "form-control" %>
           </div>
-        <% else %>
-          <img id="preview-<%= i %>" class="photo-card-image" style="display:none;">
 
-          <div class="photo-placeholder" id="placeholder-<%= i %>">
-            <span>+</span>
-            <small>Add Photo</small>
+          <div class="mb-3">
+            <%= f.label :name, class: "form-label" %>
+            <%= f.text_field :name,
+                  autocomplete: "name",
+                  class: "form-control" %>
           </div>
+
+          <div class="mb-4">
+            <%= f.label :description, class: "form-label" %>
+            <%= f.text_area :description,
+                  rows: 4,
+                  autocomplete: "description",
+                  class: "form-control" %>
+          </div>
+
+          <hr>
+
+          <h4 class="mb-3">📸 Photos</h4>
+
+          <div class="photo-grid mb-4">
+            <% 6.times do |i| %>
+              <% photo = resource.photos.find { |p| p.position == i } %>
+
+              <label class="photo-card">
+                <% if photo&.image&.attached? %>
+                  <%= image_tag photo.image,
+                        class: "photo-card-image",
+                        id: "preview-#{i}" %>
+
+                  <div class="photo-placeholder"
+                       id="placeholder-<%= i %>"
+                       style="display:none;">
+                    <span>+</span>
+                    <small>Add Photo</small>
+                  </div>
+
+                <% else %>
+
+                  <img id="preview-<%= i %>"
+                       class="photo-card-image"
+                       style="display:none;">
+
+                  <div class="photo-placeholder"
+                       id="placeholder-<%= i %>">
+                    <span>+</span>
+                    <small>Add Photo</small>
+                  </div>
+
+                <% end %>
+
+                <%= file_field_tag "photos[#{i}]",
+                      accept: "image/*",
+                      class: "photo-input",
+                      data: { slot: i } %>
+
+              </label>
+            <% end %>
+          </div>
+
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <div class="alert alert-warning">
+              Waiting confirmation for
+              <strong><%= resource.unconfirmed_email %></strong>
+            </div>
+          <% end %>
+
+          <hr>
+
+          <h4 class="mb-3">🔒 Change Password</h4>
+
+          <div class="mb-3">
+            <%= f.label :password, class: "form-label" %>
+
+            <% if @minimum_password_length %>
+              <div class="form-text mb-2">
+                Leave blank to keep your current password.
+                Minimum <%= @minimum_password_length %> characters.
+              </div>
+            <% end %>
+
+            <%= f.password_field :password,
+                  autocomplete: "new-password",
+                  class: "form-control" %>
+          </div>
+
+          <div class="mb-4">
+            <%= f.label :password_confirmation, class: "form-label" %>
+            <%= f.password_field :password_confirmation,
+                  autocomplete: "new-password",
+                  class: "form-control" %>
+          </div>
+
+          <div class="d-grid">
+            <%= f.submit "Save Changes",
+                  class: "btn btn-danger btn-lg rounded-pill" %>
+          </div>
+
         <% end %>
 
-        <%= file_field_tag "photos[#{i}]",
-              accept: "image/*",
-              class: "photo-input",
-              data: { slot: i } %>
-      </label>
-    <% end %>
-  </div>
+      </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+    </div>
 
-  <div class="field">
-    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-    <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> characters minimum</em></p>
-    <% end %>
   </div>
-
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
+</div>

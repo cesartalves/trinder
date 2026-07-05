@@ -1,18 +1,6 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+
+
+ @import "bootstrap";
 
  .photo-grid {
   display: grid;
@@ -91,5 +79,48 @@
 }
 
 .dislike-button {
+  color: #ff4458;
+}
+
+.nav-icon {
+  color: #666;
+  font-size: 1.8rem;
+  text-decoration: none;
+  margin: 0 12px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-icon:hover {
+  color: #ff4458;
+  transform: scale(1.1);
+}
+
+.navbar-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+  padding: 16px 0;
+}
+
+.logout-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+
+.logout-button:hover {
   color: #ff4458;
 }

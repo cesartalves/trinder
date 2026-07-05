@@ -20,6 +20,7 @@ class PotentialMatchesController < ApplicationController
           state: :matched,
           match: match
         )
+        return redirect_to root_path, notice: "You matched with #{other_user.name}!"
       end
     elsif @potential_match.potential?
       @potential_match.update!(
@@ -44,29 +45,34 @@ class PotentialMatchesController < ApplicationController
   private
 
   def find_or_create_potential_match
-    user_without_potential_match = User
-      .where.not(id: current_user.id)
-      .where.not(
-        id: PotentialMatch.select(:user_1_id)
-      )
-      .where.not(
-        id: PotentialMatch.select(:user_2_id)
-      )
-      .first
-
-    if user_without_potential_match
-      return PotentialMatch.create!(
-        user_1: current_user,
-        user_2: user_without_potential_match,
-        state: "potential"
-      )
-    end
-
-    PotentialMatch
+    existing_potential_match = PotentialMatch
       .where(match_id: nil)
       .where.not(state: ["declined", "matched"])
       .where("user_1_id = :id OR user_2_id = :id", id: current_user.id)
       .where("liked_by_id IS NULL OR liked_by_id != :id", id: current_user.id)
+      .order(created_at: :asc)
       .first
+
+    return existing_potential_match if existing_potential_match.present?
+
+    seen_user_ids = PotentialMatch
+      .where("user_1_id = :id OR user_2_id = :id", id: current_user.id)
+      .pluck(:user_1_id, :user_2_id)
+      .flatten
+      .uniq
+
+    user = User
+      .where.not(id: current_user.id)
+      .where.not(id: seen_user_ids)
+      .order(created_at: :asc)
+      .first
+
+    return nil unless user.present?
+
+    PotentialMatch.create!(
+      user_1: current_user,
+      user_2: user,
+      state: "potential"
+    )
   end
 end

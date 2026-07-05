@@ -58,3 +58,7 @@ end
 
 gem "devise", "~> 5.0"
 gem "aws-sdk-s3"
+
+gem "bootstrap", "~> 5.3"
+
+gem "dartsass-sprockets", "~> 3.2"

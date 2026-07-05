@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_05_142323) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_05_170550) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_05_142323) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_1_id", "user_2_id"], name: "index_matches_on_user_1_id_and_user_2_id", unique: true
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "match_id", null: false
+    t.bigint "user_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_id"], name: "index_messages_on_match_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "photos", force: :cascade do |t|
@@ -92,6 +102,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_05_142323) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "matches", "users", column: "user_1_id"
   add_foreign_key "matches", "users", column: "user_2_id"
+  add_foreign_key "messages", "matches"
+  add_foreign_key "messages", "users"
   add_foreign_key "photos", "users"
   add_foreign_key "potential_matches", "matches"
   add_foreign_key "potential_matches", "users", column: "liked_by_id"

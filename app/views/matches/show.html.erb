@@ -1,8 +1,26 @@
-<h1>Match Details</h1>
 
-<% other_user = @match.user_1 == current_user ? @match.user_2 : @match.user_1 %>
+<% profile_photo = @other_user.photos.find_by(position: 0) %>
 
-<p><strong>Name:</strong> <%= other_user.name %></p>
-<p><strong>Description:</strong> <%= other_user.description %></p>
+      
+  <% if profile_photo&.image&.attached? %>
+    <%= image_tag profile_photo.image, class: "match-avatar" %>
+  <% else %>
+    <div class="match-avatar-placeholder">
+      <i class="bi bi-person-fill"></i>
+    </div>
+  <% end %>
+<span style="font-weight: bold; size: 3rem;"><%= @other_user.name %></span>
 
-<%= link_to "Back to matches", matches_path %>
+<div class="chat-box">
+  <% @messages.each do |message| %>
+    <div class="chat-message <%= message.user == current_user ? "mine" : "theirs" %>">
+      <p><%= message.body %></p>
+      <small><%= message.created_at.strftime("%H:%M") %></small>
+    </div>
+  <% end %>
+</div>
+
+<%= form_with model: [@match, @message], class: "chat-form" do |f| %>
+  <%= f.text_field :body, placeholder: "Type a message...", autocomplete: "off" %>
+  <%= f.submit "Send" %>
+<% end %>

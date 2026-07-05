@@ -12,6 +12,31 @@
   %>
 
   <h2><%= other_user.name %></h2>
+  <% photos = other_user.photos.order(:position).select { |p| p.image.attached? } %>
+
+  <div class="tinder-carousel" data-controller="photo-carousel">
+    <% photos.each_with_index do |photo, index| %>
+      <div class="tinder-slide <%= "active" if index == 0 %>" data-photo-carousel-target="slide">
+        <%= image_tag photo.image, class: "tinder-photo" %>
+      </div>
+    <% end %>
+
+    <% if photos.any? %>
+      <button type="button" class="carousel-zone left" data-action="click->photo-carousel#previous"></button>
+      <button type="button" class="carousel-zone right" data-action="click->photo-carousel#next"></button>
+
+      <div class="carousel-indicators">
+        <% photos.each_with_index do |_, index| %>
+          <span class="carousel-dot <%= "active" if index == 0 %>" data-photo-carousel-target="dot"></span>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="tinder-photo-placeholder">
+        No photos yet
+      </div>
+    <% end %>
+  </div>
+
   <p><%= other_user.description %></p>
 
   <div class="potential-match-actions">

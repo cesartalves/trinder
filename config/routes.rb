@@ -22,7 +22,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :matches, only: [:index, :show]
+  resources :matches, only: [:index, :show] do
+    resources :messages, only: [:create]
+  end
 
   root "potential_matches#index"
 end

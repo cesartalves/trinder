@@ -4,9 +4,21 @@
   <ul>
     <% @matches.each do |match| %>
       <% other_user = match.user_1 == current_user ? match.user_2 : match.user_1 %>
-      <li>
-        <%= link_to other_user.name, match_path(match) %>
-      </li>
+      <li class="match-item">
+      <% profile_photo = other_user.photos.find_by(position: 0) %>
+
+      <%= link_to match_path(match), class: "match-link" do %>
+        <% if profile_photo&.image&.attached? %>
+          <%= image_tag profile_photo.image, class: "match-avatar" %>
+        <% else %>
+          <div class="match-avatar-placeholder">
+            <i class="bi bi-person-fill"></i>
+          </div>
+        <% end %>
+
+        <span><%= other_user.name %></span>
+      <% end %>
+  </li>
     <% end %>
   </ul>
 <% else %>

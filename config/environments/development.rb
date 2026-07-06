@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("lib/action_mailer/brevo_delivery_method")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -41,7 +42,17 @@ Rails.application.configure do
   # caching is enabled.
   config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.add_delivery_method(
+  :brevo,
+  ActionMailer::BrevoDeliveryMethod
+)
+
+  config.action_mailer.delivery_method = :brevo
+
+  config.action_mailer.default_url_options = {
+    host: ENV.fetch("MAILER_HOST"),
+    protocol: ENV.fetch("MAILER_PROTOCOL", "https")
+}
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

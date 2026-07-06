@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("lib/action_mailer/brevo_delivery_method")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -103,10 +104,15 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  config.action_mailer.default_url_options = {
-  host: ENV.fetch("MAILER_HOST"),
-  protocol: ENV.fetch("MAILER_PROTOCOL", "https")
-}
+  config.action_mailer.add_delivery_method(
+  :brevo,
+  ActionMailer::BrevoDeliveryMethod
+)
 
-  Rails.application.routes.default_url_options[:host] = ENV.fetch("MAILER_HOST")
+  config.action_mailer.delivery_method = :brevo
+
+  config.action_mailer.default_url_options = {
+    host: ENV.fetch("MAILER_HOST"),
+    protocol: ENV.fetch("MAILER_PROTOCOL", "https")
+}
 end

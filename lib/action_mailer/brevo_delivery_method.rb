@@ -10,22 +10,35 @@ module ActionMailer
 
       api_instance = Brevo::TransactionalEmailsApi.new
 
-      recipients = Array(mail.to).map { |email| { email: email } }
+      recipients = Array(mail.to).map do |email|
+        Brevo::SendSmtpEmailTo.new(email: email)
+      end
 
-      sender = {
+      sender = Brevo::SendSmtpEmailSender.new(
         email: ENV.fetch("MAILER_FROM_EMAIL"),
         name: ENV.fetch("MAILER_FROM_NAME", "Trinder")
-      }
+      )
 
-      email = Brevo::SendSmtpEmail.new(
+      html_content =  
+        if mail.html_part
+          mail.html_part.body.decoded
+        else
+          mail.body.decoded
+        end
+
+      email = Brevo::SendSmtpEmail.new({
         sender: sender,
         to: recipients,
         subject: mail.subject,
-        html_content: mail.html_part&.body&.decoded || mail.body.decoded,
-        text_content: mail.text_part&.body&.decoded
-      )
+        htmlContent: html_content.presence || "<p>#{ERB::Util.html_escape(mail.body.decoded)}</p>",
+        textContent: mail.text_part&.body&.decoded || mail.body.decoded
+      })
 
       api_instance.send_transac_email(email)
+    rescue Brevo::ApiError => e
+      Rails.logger.error("Brevo API error: #{e.message}")
+      Rails.logger.error("Brevo response body: #{e.response_body}") if e.respond_to?(:response_body)
+      raise
     end
   end
 end

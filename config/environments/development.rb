@@ -43,16 +43,21 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   config.action_mailer.add_delivery_method(
-  :brevo,
-  ActionMailer::BrevoDeliveryMethod
-)
+    :brevo,
+    ActionMailer::BrevoDeliveryMethod
+  )
 
   config.action_mailer.delivery_method = :brevo
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.default_url_options = {
-    host: ENV.fetch("MAILER_HOST"),
-    protocol: ENV.fetch("MAILER_PROTOCOL", "https")
-}
+    host: ENV.fetch("MAILER_HOST", "localhost:3000"),
+    protocol: ENV.fetch("MAILER_PROTOCOL", "http")
+  }
+
+  # Stop printing full emails in the Rails server log
+  config.action_mailer.logger = nil
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

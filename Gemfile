@@ -68,3 +68,5 @@ gem "omniauth-google-oauth2", "~> 1.2"
 gem "omniauth-rails_csrf_protection", "~> 2.0"
 
 gem "dotenv-rails", groups: [:development, :test]
+
+gem "brevo", "~> 4.0"

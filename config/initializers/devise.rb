@@ -24,7 +24,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'b1018b001@smtp-brevo.com'
+  config.mailer_sender = "#{ENV.fetch("MAILER_FROM_NAME", "Trinder")} <#{ENV.fetch("MAILER_FROM_EMAIL")}>"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'

@@ -23,5 +23,21 @@ module Trinder
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.action_mailer.delivery_method = :smtp
+
+    config.action_mailer.default_url_options = {
+      host: ENV.fetch("MAILER_HOST", "localhost:3000"),
+      protocol: ENV.fetch("MAILER_PROTOCOL", "http")
+    }
+
+    config.action_mailer.smtp_settings = {
+      address: "smtp-relay.brevo.com",
+      port: 587,
+      domain: ENV.fetch("MAILER_DOMAIN", "trinder.onrender.com"),
+      user_name: ENV.fetch("BREVO_SMTP_USERNAME"),
+      password: ENV.fetch("BREVO_SMTP_PASSWORD"),
+      authentication: :login,
+      enable_starttls_auto: true
+    }
   end
 end

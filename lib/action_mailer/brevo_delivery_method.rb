@@ -4,10 +4,11 @@ module ActionMailer
     end
 
     def deliver!(mail)
-      config = Brevo::Configuration.new
-      config.api_key["api-key"] = ENV.fetch("BREVO_API_KEY")
+      Brevo.configure do |config|
+        config.api_key["api-key"] = ENV.fetch("BREVO_API_KEY")
+      end
 
-      api_instance = Brevo::TransactionalEmailsApi.new(config)
+      api_instance = Brevo::TransactionalEmailsApi.new
 
       recipients = Array(mail.to).map { |email| { email: email } }
 
